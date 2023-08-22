@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecabs_geoservice
+    username: ecabs_geoservice_user
+    password: b96ebe081245a607
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        generate_statistics: true
+  boot.admin.client:
+    url: 'http://local.srv.ecabsonline.com:1112'
+  redis:
+    host: localhost
+    port: 6379
+
+logging:
+  level:
+    mt.com.ecabs: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.stat: DEBUG
+  file: /var/log/ecabs/geo-service/geo-service.log
+  file.max-size: 10MB
+  file.max-history: 30
+
+server:
+  port: 8084
+
+ecabs:
+  internal:
+    authentication:
+      use-auth-service: false
+      credentials-type: ldap
+      #token-url: http://local.srv.ecabsonline.com:8443/auth/v1/token
+      token-url: http://localhost:2000/bouncer/auth/v1/token
+      username: devtester
+      password: Testing123%
+    services:
+      internal-resources:
+        #url: http://local.srv.ecabsonline.com:8082
+        url: http://localhost:3030
+  rest-template:
+    connection-request-timeout: 30000     # time in milliseconds
+    connection-timeout: 30000             # time in milliseconds
+    read-timeout: 30000                   # time in milliseconds
+    http-proxy:                           # if specified, rest requests will be routed through this proxy (useful for debugging). Format is host:port
+    timeout: 20000                        # used for both connect and read timeout
+  http-client-connection-pooling:
+    max-total-connections: 200
+    max-connections-per-route: 30
+
+#set this to false for production so that the documentation is not exposed
+documentation:
+  enabled: true
+
+jwt:
+  signing:
+    key-store: "classpath:bouncer_jwt_pub_key.pem"
+
+#cors configuration.
+http:
+  cors:
+    allowed-mapping: "/**"
+    allowed-origin: "*"
